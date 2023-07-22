@@ -5,16 +5,21 @@ import model.Carro;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CarroDAO {
 
     ConexaoDAO conexaoDAO;
+    List<Carro> carros;
+
+    public CarroDAO(ConexaoDAO conexaoDAO, List<Carro> carros) {
+        this.conexaoDAO = conexaoDAO;
+        this.carros = carros;
+    }
 
     public CarroDAO(ConexaoDAO conexaoDAO) {
-
         this.conexaoDAO = conexaoDAO;
-
     }
 
     // Método adiciona um carro no banco de dados e cria um objeto carro setando seus atributos
@@ -60,14 +65,48 @@ public class CarroDAO {
         return carro;
     }
 
-    public List<Carro> buscarTodos() {
+    // Método retorna lista de carros que estão no estacionamento
+    public List<Carro> obterCarros() throws Exception {
+        carros = new ArrayList<>();
 
+        if (conexaoDAO.obterConexao() != null) {
 
-        return null;
+            String sql = "SELECT tc.id, tc.nomedono, tc.marcacarro, tc.placa " +
+                    "FROM tb_carro tc " +
+                    "WHERE tc.estado = true";
+
+            try {
+
+                PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
+                ResultSet resultSet = statement.executeQuery();
+
+                while (resultSet.next()) {
+                    Integer id = resultSet.getInt("id");
+                    String proprietario = resultSet.getString("nomedono");
+                    String marca = resultSet.getString("marcacarro");
+                    String placa = resultSet.getString("placa");
+
+                    Carro carro = new Carro();
+                    carro.setMarca(marca);
+                    carro.setPlaca(placa);
+                    carro.setEstado(true);
+                    carro.setId(id);
+                    carro.setProprietario(proprietario);
+
+                    carros.add(carro);
+
+                }
+
+            } catch (SQLException e) {
+
+                throw new RuntimeException(e);
+
+            }
+        }
+
+        return carros;
+
     }
-
-
-
     // Método verifica se carro existe no banco de dados
 
     public boolean verificarSeCarroExiste(String placa) throws Exception {

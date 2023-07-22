@@ -60,4 +60,16 @@ public class Estacionamento {
     public void setCarros(List<Carro> carros) {
         this.carros = carros;
     }
+
+    @Override
+    public String toString() {
+        return "Estacionamento{" +
+                "id=" + id +
+                ", entrada=" + entrada +
+                ", saida=" + saida +
+                ", permanencia=" + permanencia +
+                ", valorPago=" + valorPago +
+                ", carros=" + carros +
+                '}';
+    }
 }

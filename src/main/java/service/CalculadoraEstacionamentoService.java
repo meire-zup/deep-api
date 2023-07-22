@@ -2,6 +2,10 @@ package service;
 
 import model.model.Permanencia;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+
 public class CalculadoraEstacionamentoService {
 
     public Double valorPago (double permanencia) {
@@ -36,4 +40,11 @@ public class CalculadoraEstacionamentoService {
         return adicional;
     }
 
+    public Double calculaPermanencia (LocalTime entrada, LocalTime saida){
+
+        double permanencia = entrada.until(saida, ChronoUnit.MINUTES);
+
+        return permanencia;
+    }
 }
+

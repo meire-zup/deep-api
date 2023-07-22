@@ -3,10 +3,7 @@ package dao;
 import model.Carro;
 import model.Estacionamento;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Time;
+import java.sql.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,11 +121,131 @@ public class EstacionamentoDAO {
 
         }
 
+    }
 
+    // seta saida do veiculo do estacionamento
+    public void datarSaida(String placa, LocalTime saida) {
+
+        try {
+            if(conexaoDAO.obterConexao() != null) {
+
+                String sql = "UPDATE tb_estacionamento SET saida = ? WHERE placa = ?";
+
+                PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
+                statement.setTime(1, Time.valueOf(saida));
+                statement.setString(2, placa);
+                statement.executeUpdate();
+            }
+        } catch (Exception e) {
+
+            System.out.println("Erro ao datar saido do veiculo " + e.getMessage());
+            throw new RuntimeException(e);
+
+        }
 
     }
 
+    // Método busca entrada do carro recebendo como parâmetro a placa
+    public LocalTime buscarEntrada(String placa) throws Exception {
 
+        Integer id = carroDAO.buscarIdCarro(placa);
+
+        LocalTime entrada = null;
+
+
+        try {
+            if (conexaoDAO.obterConexao() != null) {
+
+                String sql = "SELECT entrada FROM tb_estacionamento WHERE carroid = ?";
+
+                PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
+
+                statement.setInt(1, id);
+
+                ResultSet resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+
+                    Time horaEntrada =  resultSet.getTime("entrada");
+                    entrada = horaEntrada.toLocalTime();
+                }
+            }
+        } catch (SQLException e) {
+
+            System.out.println("Erro ao buscar data de entrada!" + e.getMessage());
+            throw new RuntimeException(e);
+
+        }
+
+        return entrada;
+    }
+
+    // Método busca entrada do carro recebendo como parâmetro a placa
+    public LocalTime buscarSaida(String placa) throws Exception {
+
+        Integer id = carroDAO.buscarIdCarro(placa);
+
+        LocalTime saida = null;
+
+
+        try {
+            if (conexaoDAO.obterConexao() != null) {
+
+                String sql = "SELECT saida FROM tb_estacionamento WHERE carroid = ?";
+
+                PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
+
+                statement.setInt(1, id);
+
+                ResultSet resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+
+                    Time horaEntrada =  resultSet.getTime("saida");
+                    saida = horaEntrada.toLocalTime();
+                }
+            }
+        } catch (SQLException e) {
+
+            System.out.println("Erro ao buscar data de saida!" + e.getMessage());
+            throw new RuntimeException(e);
+
+        }
+
+        return saida;
+    }
+
+    public void atualizarValorTotal(String placa, Double valorPago) {
+
+        Integer carroId = null;
+        try {
+            carroId = carroDAO.buscarIdCarro(placa);
+
+        } catch (Exception e) {
+
+            System.out.println("Não foi possível encontrar código do veículo " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+        try {
+            if(conexaoDAO.obterConexao() != null) {
+
+                String sql = "UPDATE tb_estacionamento SET valorpago = ? WHERE carroid = ?";
+
+                PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
+                statement.setDouble(1, valorPago);
+                statement.setInt(2, carroId);
+                statement.executeUpdate();
+            }
+        } catch (Exception e) {
+
+            System.out.println("Não foi possível atualizar valor pago.");
+
+            throw new RuntimeException(e);
+
+        }
+
+    }
 
 }
 
