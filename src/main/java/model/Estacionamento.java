@@ -1,12 +1,14 @@
-package deep_estacionamento.model;
+package model;
+
+import model.Carro;
 
 import java.time.LocalTime;
 import java.util.List;
 
 public class Estacionamento {
     private Integer id;
-    private LocalTime dataEntrada;
-    private LocalTime dataSaida;
+    private LocalTime entrada;
+    private LocalTime saida;
     private Double permanencia;
     private Double valorPago;
     private List<Carro> carros;
@@ -19,20 +21,20 @@ public class Estacionamento {
         this.id = id;
     }
 
-    public LocalTime getDataEntrada() {
-        return dataEntrada;
+    public LocalTime getEntrada() {
+        return entrada;
     }
 
     public void setDataEntrada(LocalTime dataEntrada) {
-        this.dataEntrada = dataEntrada;
+        this.entrada = dataEntrada;
     }
 
-    public LocalTime getDataSaida() {
-        return dataSaida;
+    public LocalTime getSaida() {
+        return saida;
     }
 
     public void setDataSaida(LocalTime dataSaida) {
-        this.dataSaida = dataSaida;
+        this.saida = dataSaida;
     }
 
     public Double getPermanencia() {

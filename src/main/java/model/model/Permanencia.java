@@ -1,4 +1,4 @@
-package deep_estacionamento.model;
+package model.model;
 
 public enum Permanencia {
 

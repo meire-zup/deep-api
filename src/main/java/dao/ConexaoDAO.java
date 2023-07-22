@@ -24,7 +24,7 @@ public class ConexaoDAO {
 
         } catch (SQLException e) {
 
-                throw new Exception("Erro ao adicionar cliente" + e.getMessage());
+                throw new Exception("Erro ao se conectar ao banco de dados" + e.getMessage());
             }
 
             return conexao;

@@ -1,8 +1,8 @@
-package deep_estacionamento.model;
+package model;
 
 public class Carro {
     private Integer id;
-    private String nomeProprietario;
+    private String proprietario;
     private String marca;
     private String placa;
     private Boolean estado;
@@ -15,12 +15,14 @@ public class Carro {
         this.id = id;
     }
 
-    public String getNomeProprietario() {
-        return nomeProprietario;
+    public String getProprietario() {
+
+        return proprietario;
     }
 
-    public void setNomeProprietario(String nomeProprietario) {
-        this.nomeProprietario = nomeProprietario;
+    public void setProprietario(String proprietario) {
+
+        this.proprietario = proprietario;
     }
 
     public String getMarca() {
@@ -45,5 +47,16 @@ public class Carro {
 
     public void setEstado(Boolean estado) {
         this.estado = estado;
+    }
+
+    @Override
+    public String toString() {
+        return "Carro{" +
+                "id=" + id +
+                ", proprietario='" + proprietario + '\'' +
+                ", marca='" + marca + '\'' +
+                ", placa='" + placa + '\'' +
+                ", estado=" + estado +
+                '}';
     }
 }
