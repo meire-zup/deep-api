@@ -14,10 +14,12 @@ import java.util.List;
 public class EstacionamentoDAO {
 
     ConexaoDAO conexaoDAO;
+    CarroDAO carroDAO;
 
-    public EstacionamentoDAO(ConexaoDAO conexaoDAO) {
+    public EstacionamentoDAO(ConexaoDAO conexaoDAO, CarroDAO carroDAO) {
 
         this.conexaoDAO = conexaoDAO;
+        this.carroDAO = carroDAO;
 
     }
 
@@ -36,7 +38,7 @@ public class EstacionamentoDAO {
             PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
             statement.setTime(1, Time.valueOf(entrada));
             statement.setInt(2, carroId);
-            statement.setDouble(3,permanencia);
+            statement.setDouble(3, permanencia);
 
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -55,7 +57,7 @@ public class EstacionamentoDAO {
             throw new RuntimeException();
 
         }
-        return  estacionamento;
+        return estacionamento;
     }
 
 
@@ -102,6 +104,32 @@ public class EstacionamentoDAO {
         return carros;
 
     }
+    // Atualiza permanencia de veículo no estacionamento - testado
+    public void atualizarPermanencia(Integer carroId, Double permanencia) {
+
+        try {
+            if(conexaoDAO.obterConexao() != null) {
+
+                String sql = "UPDATE tb_estacionamento SET permanencia = ? WHERE carroid = ?";
+
+                PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
+                statement.setDouble(1, permanencia);
+                statement.setInt(2, carroId);
+                statement.executeUpdate();
+            }
+        } catch (Exception e) {
+
+            System.out.println("Não foi possível atualizar permanencia.");
+            throw new RuntimeException(e);
+
+        }
+
+
+
+    }
+
+
+
 }
 
 

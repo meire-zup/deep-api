@@ -133,5 +133,30 @@ public class CarroDAO {
         return id;
     }
 
+    // Método da baixa em um automóvel no estacionamento -testado
+    public void baixarCarroDoSistema(String placa) {
+
+        Boolean estado = false;
+
+        try {
+            if(conexaoDAO.obterConexao() != null) {
+
+                String sql = "UPDATE tb_carro SET estado = ? WHERE placa = ?";
+
+                PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
+                statement.setBoolean(1, estado);
+                statement.setString(2, placa);
+                statement.executeUpdate();
+            }
+        } catch (Exception e) {
+
+            System.out.println("Não foi possível dar baixa no automóvel de placa ." + placa);
+
+            throw new RuntimeException(e);
+
+        }
+
+    }
+
 }
 

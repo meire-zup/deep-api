@@ -3,6 +3,7 @@ import dao.ConexaoDAO;
 import dao.EstacionamentoDAO;
 import model.Carro;
 import model.Estacionamento;
+import service.CalculadoraEstacionamentoService;
 
 import java.time.LocalTime;
 
@@ -11,11 +12,10 @@ public class MainTest {
     public static void main(String[] args) throws Exception {
 
         ConexaoDAO conexaoDAO = new ConexaoDAO();
-
         conexaoDAO.obterConexao();
 
         CarroDAO carroDAO = new CarroDAO(conexaoDAO);
-        EstacionamentoDAO estacionamentoDAO = new EstacionamentoDAO(conexaoDAO);
+        EstacionamentoDAO estacionamentoDAO = new EstacionamentoDAO(conexaoDAO, carroDAO);
         /*Carro carro = carroDAO.adicionar("Meire", "Fiat", "1234ABC");
         System.out.println(carro.getId()+" "+ carro.getEstado());
         System.out.println(carro.getMarca()+" "+ carro.getPlaca());
@@ -26,7 +26,14 @@ public class MainTest {
         System.out.println(registro.getPermanencia());
         System.out.println(registro.getId());*/
 
-        System.out.println(estacionamentoDAO.obterCarros());
+       // System.out.println(estacionamentoDAO.obterCarros());
+        //System.out.println(carroDAO.buscarIdCarro("1234ABC"));
+        //estacionamentoDAO.atualizarPermanencia(1, 14.0);
+        carroDAO.baixarCarroDoSistema("1234ABC");
+        CalculadoraEstacionamentoService calculadoraEstacionamentoService = new CalculadoraEstacionamentoService();
+        double valor = calculadoraEstacionamentoService.valorPago(190);
+        System.out.println(valor);
+
 
 
 
