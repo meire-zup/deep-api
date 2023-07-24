@@ -30,4 +30,6 @@ Cada permanência tem o seu valor:
 - O usuário deverá excluir da tabela os carros que estiverem saindo do estacionamento.
 - Você junto ao seu grupo precisarão discutir como será a arquitetura do banco de vocês, documente essa discussão.
 - Crie uma documentação explicando como funciona o seu projeto.
+- Documentação da solução em equipe para a arquitetura da aplicação:
+  https://drive.google.com/file/d/1LtX5Qp5O6ea7vZVsDuqCYML_XDMMrs6D/view?usp=sharing
 
