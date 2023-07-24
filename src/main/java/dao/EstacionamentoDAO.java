@@ -113,6 +113,7 @@ public class EstacionamentoDAO {
                 statement.setDouble(1, permanencia);
                 statement.setInt(2, carroId);
                 statement.executeUpdate();
+                System.out.println("Permanencia foi atualizada para " + permanencia);
             }
         } catch (Exception e) {
 
@@ -124,21 +125,21 @@ public class EstacionamentoDAO {
     }
 
     // seta saida do veiculo do estacionamento
-    public void datarSaida(String placa, LocalTime saida) {
+    public void datarSaida(Integer carroId, LocalTime saida) {
 
         try {
             if(conexaoDAO.obterConexao() != null) {
 
-                String sql = "UPDATE tb_estacionamento SET saida = ? WHERE placa = ?";
+                String sql = "UPDATE tb_estacionamento SET saida = ? WHERE carroId = ?";
 
                 PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
                 statement.setTime(1, Time.valueOf(saida));
-                statement.setString(2, placa);
+                statement.setInt(2, carroId);
                 statement.executeUpdate();
             }
         } catch (Exception e) {
 
-            System.out.println("Erro ao datar saido do veiculo " + e.getMessage());
+            System.out.println("Erro ao datar saída do veiculo " + e.getMessage());
             throw new RuntimeException(e);
 
         }

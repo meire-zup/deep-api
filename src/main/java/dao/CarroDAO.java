@@ -22,7 +22,7 @@ public class CarroDAO {
         this.conexaoDAO = conexaoDAO;
     }
 
-    // Método adiciona um carro no banco de dados e cria um objeto carro setando seus atributos
+    // Método adiciona um carro no banco de dados e cria um objeto carro setando seus atributos - testado
     public Carro adicionar(String proprietario, String marca, String placa) throws Exception {
 
         Carro carro = null;
@@ -30,17 +30,19 @@ public class CarroDAO {
         Integer id = 0;
 
         boolean estado = true;
+        String usuario = "Meire Lopes";
 
         try {
             if (conexaoDAO.obterConexao() != null) {
-                String sql = "INSERT INTO tb_carro (nomedono, marcacarro, placa, estado)" +
-                        " values (?, ?, ?, ?) RETURNING id";
+                String sql = "INSERT INTO tb_carro (nomedono, marcacarro, placa, estado, usuario)" +
+                        " values (?, ?, ?, ?, ?) RETURNING id";
 
                 PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
                 statement.setString(1, proprietario);
                 statement.setString(2, marca);
                 statement.setString(3, placa);
                 statement.setBoolean(4, estado);
+                statement.setString(5, usuario);
                 ResultSet resultSet = statement.executeQuery();
 
                 if (resultSet.next()) {
@@ -65,50 +67,8 @@ public class CarroDAO {
         return carro;
     }
 
-    // Método retorna lista de carros que estão no estacionamento
-    public List<Carro> obterCarros() throws Exception {
-        carros = new ArrayList<>();
 
-        if (conexaoDAO.obterConexao() != null) {
-
-            String sql = "SELECT tc.id, tc.nomedono, tc.marcacarro, tc.placa " +
-                    "FROM tb_carro tc " +
-                    "WHERE tc.estado = true";
-
-            try {
-
-                PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
-                ResultSet resultSet = statement.executeQuery();
-
-                while (resultSet.next()) {
-                    Integer id = resultSet.getInt("id");
-                    String proprietario = resultSet.getString("nomedono");
-                    String marca = resultSet.getString("marcacarro");
-                    String placa = resultSet.getString("placa");
-
-                    Carro carro = new Carro();
-                    carro.setMarca(marca);
-                    carro.setPlaca(placa);
-                    carro.setEstado(true);
-                    carro.setId(id);
-                    carro.setProprietario(proprietario);
-
-                    carros.add(carro);
-
-                }
-
-            } catch (SQLException e) {
-
-                throw new RuntimeException(e);
-
-            }
-        }
-
-        return carros;
-
-    }
-    // Método verifica se carro existe no banco de dados
-
+    // Método verifica se carro está cadastrado no banco de dados do estacionamento - testado
     public boolean verificarSeCarroExiste(String placa) throws Exception {
 
         boolean existe = false;
@@ -139,6 +99,44 @@ public class CarroDAO {
         return existe;
 
     }
+
+    // Método verifica se carro está presente no estacionamento - testado
+    public Boolean buscarCarroNoEstacionamento(String placa){
+
+        boolean estado = false;
+
+        if (conexaoDAO.obterConexao() != null) {
+
+            String sql = "SELECT estado FROM tb_carro WHERE placa = ?";
+
+            try {
+
+                PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
+                statement.setString(1, placa);
+                ResultSet resultSet = statement.executeQuery();
+
+                    if (resultSet.next()){
+
+                        estado = resultSet.getBoolean("estado");
+
+                    } else
+                    estado = false;
+
+
+
+            } catch (SQLException e) {
+
+                System.out.println("Erro ao consultar carro!");
+                throw new RuntimeException(e);
+
+            }
+
+        }
+
+        return estado;
+
+    }
+
 
     // Método busca id do carro recebendo como parâmetro a placa
     public Integer buscarIdCarro(String placa) throws Exception {
@@ -190,6 +188,29 @@ public class CarroDAO {
         } catch (Exception e) {
 
             System.out.println("Não foi possível dar baixa no automóvel de placa ." + placa);
+
+            throw new RuntimeException(e);
+
+        }
+
+    }
+    public void ativarCarroNoSistema(String placa) {
+
+        Boolean estado = true;
+
+        try {
+            if(conexaoDAO.obterConexao() != null) {
+
+                String sql = "UPDATE tb_carro SET estado = ? WHERE placa = ?";
+
+                PreparedStatement statement = conexaoDAO.obterConexao().prepareStatement(sql);
+                statement.setBoolean(1, estado);
+                statement.setString(2, placa);
+                statement.executeUpdate();
+            }
+        } catch (Exception e) {
+
+            System.out.println("Não foi possível ativar entrada do automóvel de placa ." + placa);
 
             throw new RuntimeException(e);
 

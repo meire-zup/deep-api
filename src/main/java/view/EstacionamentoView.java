@@ -12,7 +12,13 @@ public class EstacionamentoView {
     EstacionamentoService estacionamentoService;
     Scanner scanner;
 
+    public EstacionamentoView(EstacionamentoService estacionamentoService, Scanner scanner) {
+        this.estacionamentoService = estacionamentoService;
+        this.scanner = scanner;
+    }
+
     public List<Carro> listar() {
+
 
         return estacionamentoService.listar();
 

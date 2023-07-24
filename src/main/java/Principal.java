@@ -2,63 +2,88 @@ import dao.CarroDAO;
 import dao.ConexaoDAO;
 import dao.EstacionamentoDAO;
 import model.Carro;
+import service.CalculadoraEstacionamentoService;
 import service.CarroService;
+import service.EstacionamentoService;
 import view.CarroView;
+import view.EstacionamentoView;
+import view.MenuView;
 
+import java.awt.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Principal {
 
-    public static void main(String[] args) {
-
-        try {
-
+    public static void main(String[] args) throws Exception {
 
             ConexaoDAO conexaoDAO = new ConexaoDAO();
             conexaoDAO.obterConexao();
-            Scanner scanner = new Scanner(System.in);
 
             List<Carro> carros = new ArrayList<>();
 
             CarroDAO carroDAO = new CarroDAO(conexaoDAO);
-            CarroService carroService = new CarroService(carroDAO, carros);
-
             EstacionamentoDAO estacionamentoDAO = new EstacionamentoDAO(conexaoDAO, carroDAO);
-            CarroView carroView = new CarroView(scanner, carroService, carros);
-        /*Carro carro = carroDAO.adicionar("Meire", "Fiat", "1234ABC");
-        System.out.println(carro.getId()+" "+ carro.getEstado());
-        System.out.println(carro.getMarca()+" "+ carro.getPlaca());
-        System.out.println(carro.getProprietario());
 
-       Estacionamento registro = estacionamentoDAO.adicionaRegistro(LocalTime.now(),1);
-        System.out.println(registro.getEntrada());
-        System.out.println(registro.getPermanencia());
-        System.out.println(registro.getId());*/
+            CalculadoraEstacionamentoService calculadoraEstacionamentoService = new CalculadoraEstacionamentoService();
 
-            //System.out.println(carroDAO.obterCarros());
-            //System.out.println(carroDAO.buscarIdCarro("1234ABC"));
-            //estacionamentoDAO.atualizarPermanencia(1, 14.0);
-            //carroDAO.baixarCarroDoSistema("1234ABC");
-            // CalculadoraEstacionamentoService calculadoraEstacionamentoService = new CalculadoraEstacionamentoService();
-            // double valor = calculadoraEstacionamentoService.valorPago(35);
-            // System.out.println(valor);
-       /* carroView.adicionarCarro();
-             List<Carro> carros2 =   estacionamentoDAO.obterCarros();
-             carros2.toString();
-        for (Carro c: carros2) {
-            System.out.println("proprierar "+c.getProprietario());
+            // MÉTODOS TESTADOS
+            // Método adiciona novo entrada de veículo no sistema - testado
+            carroDAO.adicionar("Pedro", "Ferrari", "232433h");
 
-        }
-        System.out.println(estacionamentoDAO.obterCarros().toString());*/
-            System.out.println(estacionamentoDAO.buscarEntrada("1234ABC"));
-            System.out.println(estacionamentoDAO.buscarSaida("1234ABC"));
+            //Método verifica se placa do automóvel já está cadastrado no banco de dados - testado
+            System.out.println(carroDAO.verificarSeCarroExiste("232433h"));
 
-        } catch (Exception ignored) {
+            // Método consulta se veículo deu entrada e permanece no estacionamento - testado
+           System.out.println(carroDAO.buscarCarroNoEstacionamento("1232guf"));
 
+            // Método busca id do carro recebendo como parâmetro a placa - testado
+            System.out.println(carroDAO.buscarIdCarro("232433h"));
 
-        }
+            // Método da baixa em um automóvel no estacionamento -testado
+            carroDAO.baixarCarroDoSistema("232433h");
+
+            // Método ativa com true estado carro
+            carroDAO.ativarCarroNoSistema("232433h");
+
+            // Método cria um novo registro de entrada de um carro no estacionamento
+            estacionamentoDAO.adicionaRegistro(LocalTime.now(), 5);
+
+            // Método lista carros que deram entrada no estacionamento - testado
+               carros = estacionamentoDAO.obterCarros();
+            for (Carro carro : carros) {
+
+                    System.out.println("Placa: " + carro.getPlaca());
+                    System.out.println("Marca: " + carro.getMarca());
+                    System.out.println("Proprietário: " + carro.getProprietario());
+                    System.out.println("----------------------------------");
+
+            }
+
+            // Método atualiza permanência - testado
+            estacionamentoDAO.atualizarPermanencia(4, 23.0);
+
+            // Método data saída de carro do estacionamento
+            estacionamentoDAO.datarSaida(4, LocalTime.now());
+
+            // Método busca entrada no sistema
+            LocalTime entrada = estacionamentoDAO.buscarEntrada("232433h");
+
+            // Método busca saída no sistema
+            LocalTime saida = estacionamentoDAO.buscarSaida("232433h");
+
+            // Calcula tempo de permanencia no estacionamnto
+            Double permanencia = calculadoraEstacionamentoService.calculaPermanencia(entrada, saida);
+
+            // Calcula valor total a ser pago pela pemanência no estacionamento
+            Double valorPago = (calculadoraEstacionamentoService.valorPago(permanencia));
+
+            // Método atualiza a coluna valorpago no banco de dados
+            estacionamentoDAO.atualizarValorTotal("232433h", valorPago);
 
     }
+
+
 }

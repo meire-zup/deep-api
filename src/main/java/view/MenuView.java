@@ -2,20 +2,34 @@ package view;
 
 import java.util.Scanner;
 
+    // EM CONSTRUÇÂO
 public class MenuView {
     Scanner scanner;
     CarroView carroView;
 
     EstacionamentoView estacionamentoView;
-    public void iniciarPrograma() throws Exception {
 
-        int escolha = 0;
+    public MenuView(Scanner scanner, CarroView carroView, EstacionamentoView estacionamentoView) {
+
+        this.scanner = scanner;
+        this.carroView = carroView;
+        this.estacionamentoView = estacionamentoView;
+
+    }
+
+    public void iniciarPrograma()  {
+
+        System.out.println("ENTRANDO iniciar programa");
+
+        int escolha;
 
         do {
 
             System.out.println("Escolha uma opção:");
-            System.out.println("1 - Consultar carro");
-            System.out.println("2 - Cadastrar carro");
+            // Método consulta se veículo deu entrada e permanece no estacionamento
+            System.out.println("1 - Consultar se carro está no estacionamento");
+            // Método registra entrada de veículo
+            System.out.println("2 - Registrar entrada de veículo");
             System.out.println("3 - Listar carros");
             System.out.println("4 - Atualizar permanência");
             System.out.println("5 - Dar baixa em carro");
@@ -28,10 +42,9 @@ public class MenuView {
 
         outraConsulta();
 
-
     }
 
-    public void acionaMetodo(int escolha) throws Exception {
+    public void acionaMetodo(int escolha) {
 
         switch (escolha) {
 
@@ -57,7 +70,13 @@ public class MenuView {
 
             case 5:
 
-                estacionamentoView.baixarCarroDoSistema();
+                try {
+                    estacionamentoView.baixarCarroDoSistema();
+                } catch (Exception e) {
+
+                    System.out.println("Erro ao baixar carro do sistema");
+
+                }
                 break;
 
             case 6:
@@ -68,7 +87,7 @@ public class MenuView {
 
     }
 
-    public void outraConsulta() throws Exception {
+    public void outraConsulta() {
 
         int escolha;
 
@@ -83,7 +102,15 @@ public class MenuView {
 
             } else if (escolha == 1) {
 
-                iniciarPrograma();
+                try {
+
+                    iniciarPrograma();
+
+                } catch (Exception e) {
+
+                    System.out.println("Erro ao realizar operação");
+
+                }
 
             } else if (escolha == 2) {
                 System.out.println("Fim!");

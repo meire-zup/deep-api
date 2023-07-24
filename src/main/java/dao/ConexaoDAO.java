@@ -6,14 +6,14 @@ import java.sql.SQLException;
 
 public class ConexaoDAO {
 
-    public Connection obterConexao() throws Exception {
+    public Connection obterConexao() {
 
         Connection conexao = null;
 
         try {
 
             conexao = DriverManager.getConnection
-                    ("jdbc:postgresql://localhost:5432/deep-api", "postgres", "puc@2015");
+                    ("jdbc:postgresql://estacionamento-aws.cek2nmi2tmwz.sa-east-1.rds.amazonaws.com/estacionamentodeep", "postgres", "root1234");
 
 
         if (conexao != null) {
@@ -24,7 +24,8 @@ public class ConexaoDAO {
 
         } catch (SQLException e) {
 
-                throw new Exception("Erro ao se conectar ao banco de dados" + e.getMessage());
+            System.out.println("Erro ao se conectar ao banco de dados" + e.getMessage());
+
             }
 
             return conexao;

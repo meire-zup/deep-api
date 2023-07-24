@@ -12,6 +12,18 @@ public class EstacionamentoService {
     EstacionamentoDAO estacionamentoDAO;
     CarroDAO carroDAO;
     CalculadoraEstacionamentoService calculadoraEstacionamentoService;
+    List<Carro> carros;
+
+
+    public EstacionamentoService(EstacionamentoDAO estacionamentoDAO, CarroDAO carroDAO,
+                                 CalculadoraEstacionamentoService calculadoraEstacionamentoService, List<Carro> carros) {
+
+        this.estacionamentoDAO = estacionamentoDAO;
+        this.carroDAO = carroDAO;
+        this.calculadoraEstacionamentoService = calculadoraEstacionamentoService;
+        this.carros = carros;
+
+    }
 
     public List<Carro> listar() {
 
@@ -50,9 +62,9 @@ public class EstacionamentoService {
     }
 
     public void baixarCarroDoSistema(String placa, LocalTime saida) throws Exception {
-
+        Integer carroId = carroDAO.buscarIdCarro(placa);
         if(carroDAO.verificarSeCarroExiste(placa)) {
-            estacionamentoDAO.datarSaida(placa, saida);
+            estacionamentoDAO.datarSaida(carroId, saida);
             Double permanencia = calculadoraEstacionamentoService.
                     calculaPermanencia(estacionamentoDAO.buscarEntrada(placa),
                             estacionamentoDAO.buscarSaida(placa));
